@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>یاری پرسیار و وەڵام</title>
+    <style>
+        @font-face {
+            font-family: "K24KurdishBold";
+            src: url("K24KurdishBold-Bold.woff") format("woff"),
+                 url("K24KurdishBold-Bold.ttf") format("truetype");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'K24KurdishBold', 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 5px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(26, 188, 156, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(52, 152, 219, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(155, 89, 182, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 100%;
+            position: relative;
+            z-index: 1;
+            padding: 0 5px;
+        }
+
+        /* Login Screen Styles */
+        .login-screen {
+            display: flex;
+            background: linear-gradient(135deg, rgba(30, 30, 46, 0.95) 0%, rgba(22, 33, 62, 0.95) 100%);
+            border-radius: 15px;
+            padding: 25px 15px;
+            text-align: center;
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 0 80px rgba(26, 188, 156, 0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 5px;
+        }
+
+        .login-logo {
+            font-size: 45px;
+            margin-bottom: 15px;
+            text-shadow: 0 0 25px rgba(26, 188, 156, 0.5);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .login-title {
+            background: linear-gradient(135deg, #1abc9c 0%, #3498db 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 22px;
+            margin-bottom: 8px;
+            font-weight: bold;
+            text-shadow: 0 0 25px rgba(26, 188, 156, 0.3);
+        }
+
+        .login-subtitle {
+            color: #95a5a6;
+            font-size: 13px;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .login-form {
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .form-group {
+            margin-bottom: 12px;
+            text-align: right;
+        }
+
+        .login-label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #1abc9c;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid rgba(26, 188, 156, 0.3);
+            border-radius: 8px;
+            font-size: 14px;
+            direction: rtl;
+            background: rgba(255,255,255,0.05);
+            color: #ecf0f1;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: #1abc9c;
+            box-shadow: 0 0 12px rgba(26, 188, 156, 0.3);
+            background: rgba(255,255,255,0.1);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 10px;
+            font-size: 15px;
+            background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow: 
+                0 6px 20px rgba(26, 188, 156, 0.3),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .login-btn:hover::before {
+            left: 100%;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 10px 30px rgba(26, 188, 156, 0.5),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+
+        .error-message {
+            color: #e74c3c;
+            margin-top: 10px;
+            font-size: 11px;
+            text-shadow: 0 0 8px rgba(231, 76, 60, 0.3);
+            display: none;
+        }
+
+        .home-screen {
+            display: none;
+            background: linear-gradient(135deg, rgba(30, 30, 46, 0.95) 0%, rgba(22, 33, 62, 0.95) 100%);
+            border-radius: 15px;
+            padding: 20px 12px;
+            text-align: center;
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 0 80px rgba(26, 188, 156, 0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            margin: 5px;
+            min-height: calc(100vh - 10px);
+        }
+
+        .logo {
+            font-size: 50px;
+            margin-bottom: 12px;
+            text-shadow: 0 0 25px rgba(26, 188, 156, 0.5);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-6px); }
+        }
+
+        h1 {
+            background: linear-gradient(135deg, #1abc9c 0%, #3498db 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 22px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-shadow: 0 0 25px rgba(26, 188, 156, 0.3);
+        }
+
+        .subtitle {
+            color: #95a5a6;
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+        }
+
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .menu-btn {
+            padding: 14px;
+            font-size: 15px;
+            background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            width: 100%;
+            max-width: 260px;
+            box-shadow: 
+                0 6px 20px rgba(26, 188, 156, 0.3),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .menu-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .menu-btn:hover::before {
+            left: 100%;
+        }
+
+        .menu-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 10px 30px rgba(26, 188, 156, 0.5),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+
+        .admin-screen {
+            display: none;
+            background: linear-gradient(135deg, rgba(30, 30, 46, 0.95) 0%, rgba(22, 33, 62, 0.95) 100%);
+            border-radius: 15px;
+            padding: 12px;
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 0 80px rgba(26, 188, 156, 0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            margin: 5px;
+            min-height: calc(100vh - 10px);
+            overflow-y: auto;
+        }
+
+        .game-screen {
+            display: none;
+            background: linear-gradient(135deg, rgba(30, 30, 46, 0.95) 0%, rgba(22, 33, 62, 0.95) 100%);
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 0 80px rgba(26, 188, 156, 0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            position: relative;
+            margin: 5px;
+            min-height: calc(100vh - 10px);
+        }
+
+        .control-buttons {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            display: flex;
+            gap: 5px;
+            z-index: 10;
+            flex-wrap: wrap;
+        }
+
+        .control-btn {
+            padding: 5px 8px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 10px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3);
+            transition: all 0.3s ease;
+            min-width: 60px;
+            text-align: center;
+            height: 24px;
+        }
+
+        .control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.5);
+        }
+
+        .control-btn.back-btn {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            box-shadow: 0 2px 5px rgba(231, 76, 60, 0.3);
+        }
+
+        .control-btn.back-btn:hover {
+            box-shadow: 0 4px 8px rgba(231, 76, 60, 0.5);
+        }
+
+        .questions-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 4px;
+            padding: 40px 6px 10px 6px;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(41, 128, 185, 0.1) 100%);
+            border-radius: 8px;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.3);
+            width: 100%;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .question-box {
+            width: 100%;
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 2px 4px rgba(52, 152, 219, 0.3),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .question-box.has-question {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            box-shadow: 
+                0 2px 4px rgba(155, 89, 182, 0.3),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+
+        .question-box.has-question:hover:not(:disabled) {
+            box-shadow: 
+                0 3px 6px rgba(155, 89, 182, 0.5),
+                inset 0 1px 0 rgba(255,255,255,0.3);
+        }
+
+        .question-box::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+
+        .question-box:hover:not(:disabled)::before {
+            width: 100%;
+            height: 100%;
+        }
+
+        .question-box:hover:not(:disabled) {
+            transform: scale(1.05);
+        }
+
+        .question-box:disabled {
+            background: linear-gradient(135deg, rgba(127, 140, 141, 0.5) 0%, rgba(95, 106, 106, 0.5) 100%);
+            cursor: not-allowed;
+            opacity: 0.4;
+            box-shadow: none;
+        }
+
+        .question-box.empty {
+            background: linear-gradient(135deg, rgba(149, 165, 166, 0.3) 0%, rgba(127, 140, 141, 0.3) 100%);
+            border: 1px dashed rgba(255,255,255,0.2);
+            cursor: default;
+            font-size: 16px;
+        }
+
+        .question-box.empty:hover {
+            transform: none;
+            box-shadow: 
+                0 2px 4px rgba(52, 152, 219, 0.3),
+                inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+
+        /* Media Queries for Mobile */
+        @media (max-width: 480px) {
+            .questions-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 3px;
+                padding: 35px 4px 8px 4px;
+            }
+            
+            .question-box {
+                font-size: 16px;
+                border-radius: 4px;
+            }
+            
+            .control-buttons {
+                top: 8px;
+                left: 8px;
+            }
+            
+            .control-btn {
+                font-size: 9px;
+                min-width: 55px;
+                padding: 4px 6px;
+                height: 22px;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .questions-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 2px;
+            }
+            
+            .question-box {
+                font-size: 15px;
+            }
+            
+            .container {
+                padding: 0 3px;
+            }
+            
+            .login-screen, .home-screen, .admin-screen, .game-screen {
+                padding: 12px 8px;
+                margin: 3px;
+                border-radius: 10px;
+            }
+        }
+
+        /* Scoreboard Modal */
+        .scoreboard-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+            padding: 12px;
+        }
+
+        .scoreboard-content {
+            background: linear-gradient(135deg, rgba(30, 30, 46, 0.98) 0%, rgba(22, 33, 62, 0.98) 100%);
+            padding: 18px;
+            border-radius: 10px;
+            max-width: 320px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 
+                0 12px 25px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 0 50px rgba(155, 89, 182, 0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            animation: slideUp 0.4s ease;
+        }
+
+        .scoreboard-content h3 {
+            text-align: center;
+            margin-bottom: 12px;
+            color: #9b59b6;
+            font-size: 16px;
+            text-shadow: 0 2px 6px rgba(155, 89, 182, 0.5);
+            padding-bottom: 6px;
+            border-bottom: 2px solid rgba(155, 89, 182, 0.3);
+        }
+
+        #modalScoreboardContainer {
+            margin-bottom: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        #modalScoreboardContainer::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        #modalScoreboardContainer::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 6px;
+        }
+
+        #modalScoreboardContainer::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            border-radius: 6px;
+        }
+
+        .modal-player-score {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 10px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%);
+            border-radius: 5px;
+            margin-bottom: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .modal-player-score:first-child {
+            background: linear-gradient(135deg, rgba(241, 196, 15, 0.15) 0%, rgba(243, 156, 18, 0.15) 100%);
+            border-color: rgba(241, 196, 15, 0.4);
+        }
+
+        .modal-player-name {
+            font-size: 13px;
+            font-weight: bold;
+            color: #ecf0f1;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .modal-player-rank {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            border-radius: 50%;
+            font-size: 9px;
+            font-weight: bold;
+        }
+
+        .modal-player-score:first-child .modal-player-rank {
+            background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+        }
+
+        .modal-player-points {
+            font-size: 14px;
+            color: #1abc9c;
+            font-weight: bold;
+            text-shadow: 0 0 5px rgba(26, 188, 156, 0.5);
+        }
+
+        .close-scoreboard-btn {
+            padding: 8px 14px;
+            background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(26, 188, 156, 0.4);
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .close-scoreboard-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(26, 188, 156, 0.6);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .admin-form {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+            color: #1abc9c;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid rgba(26, 188, 156, 0.3);
+            border-radius: 6px;
+            font-size: 13px;
+            direction: rtl;
+            background: rgba(255,255,255,0.05);
+            color: #ecf0f1;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #1abc9c;
+            box-shadow: 0 0 12px rgba(26, 188, 156, 0.3);
+            background: rgba(255,255,255,0.1);
+        }
+
+        .options-group {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .option-input {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .option-input input[type="radio"] {
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+            accent-color: #1abc9c;
+        }
+
+        .add-question-btn {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            margin-top: 10px;
+            box-shadow: 0 6px 15px rgba(39, 174, 96, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .add-question-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(39, 174, 96, 0.5);
+        }
+
+        .questions-list {
+            margin-top: 15px;
+        }
+
+        .questions-list h3 {
+            color: #1abc9c;
+            margin-bottom: 10px;
+            font-size: 14px;
+            text-shadow: 0 2px 6px rgba(26, 188, 156, 0.3);
+        }
+
+        .question-item {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(41, 128, 185, 0.1) 100%);
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            position: relative;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .question-item:hover {
+            transform: translateX(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+        }
+
+        .question-item h4 {
+            color: #3498db;
+            margin-bottom: 5px;
+            font-size: 13px;
+        }
+
+        .question-item p {
+            color: #ecf0f1;
+            font-size: 12px;
+        }
+
+        .question-item ul {
+            margin-top: 5px;
+            margin-right: 8px;
+            color: #bdc3c7;
+        }
+
+        .question-item ul li {
+            margin-bottom: 3px;
+            padding: 3px;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.03);
+            font-size: 11px;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 6px;
+            left: 6px;
+            padding: 3px 6px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(231, 76, 60, 0.3);
+            transition: all 0.3s ease;
+            font-size: 9px;
+        }
+
+        .delete-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(231, 76, 60, 0.5);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.3s ease;
+            padding: 10px;
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, rgba(30, 30, 46, 0.98) 0%, rgba(22, 33, 62, 0.98) 100%);
+            padding: 18px;
+            border-radius: 10px;
+            max-width: 340px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 
+                0 12px 25px rgba(0,0,0,0.5),
+                inset 0 1px 0 rgba(255,255,255,0.1),
+                0 0 50px rgba(26, 188, 156, 0.2);
+            border: 1px solid rgba(255,255,255,0.1);
+            animation: slideUp 0.4s ease;
+        }
+
+        .question-header {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.2) 0%, rgba(142, 68, 173, 0.2) 100%);
+            padding: 6px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border: 2px solid rgba(155, 89, 182, 0.3);
+        }
+
+        .question-number {
+            font-size: 14px;
+            color: #9b59b6;
+            font-weight: bold;
+            text-shadow: 0 0 6px rgba(155, 89, 182, 0.5);
+        }
+
+        .question-container {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.15) 0%, rgba(41, 128, 185, 0.15) 100%);
+            padding: 10px;
+            border-radius: 6px;
+            border: 2px solid rgba(52, 152, 219, 0.3);
+            margin-bottom: 10px;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+        }
+
+        .question-text {
+            font-size: 15px;
+            margin-bottom: 0;
+            color: #ecf0f1;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            line-height: 1.3;
+        }
+
+        .timer {
+            font-size: 24px;
+            color: #e74c3c;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+            animation: pulse 1s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.04); }
+        }
+
+        .answers-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .answer-btn {
+            padding: 8px;
+            font-size: 12px;
+            border: 2px solid rgba(52, 152, 219, 0.5);
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(41, 128, 185, 0.1) 100%);
+            color: #ecf0f1;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .answer-btn:hover:not(.correct):not(.wrong) {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.3) 0%, rgba(41, 128, 185, 0.3) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
+        }
+
+        .answer-btn.correct {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            border-color: #27ae60;
+            color: white;
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.5);
+            animation: correctPulse 0.5s ease;
+        }
+
+        .answer-btn.wrong {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            border-color: #e74c3c;
+            color: white;
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.5);
+            animation: wrongShake 0.5s ease;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-3px); }
+            75% { transform: translateX(3px); }
+        }
+
+        .modal-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .show-answer-btn {
+            padding: 8px 14px;
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(243, 156, 18, 0.4);
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .show-answer-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(243, 156, 18, 0.6);
+        }
+
+        .close-modal-btn {
+            padding: 8px 14px;
+            background: linear-gradient(135deg, #1abc9c 0%, #16a085 100%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 12px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(26, 188, 156, 0.4);
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .close-modal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(26, 188, 156, 0.6);
+        }
+
+        .player-selector {
+            margin-bottom: 10px;
+        }
+
+        .player-selector p {
+            color: #1abc9c;
+            font-size: 13px;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        .player-btn {
+            padding: 6px 10px;
+            margin: 2px;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.2) 0%, rgba(41, 128, 185, 0.2) 100%);
+            color: #ecf0f1;
+            border: 2px solid rgba(52, 152, 219, 0.5);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            width: 100%;
+        }
+
+        .player-btn:hover {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.4) 0%, rgba(41, 128, 185, 0.4) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 3px 6px rgba(52, 152, 219, 0.4);
+        }
+
+        .player-btn.active {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            border-color: #27ae60;
+            box-shadow: 0 3px 6px rgba(39, 174, 96, 0.5);
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Screen -->
+        <div class="login-screen" id="loginScreen">
+            <div class="login-logo">🔐</div>
+            <h1 class="login-title">چوونەژوورەوە</h1>
+            <p class="login-subtitle">تکایە ناونیشانی ئیمەیڵ و تێپەڕەوشە بنووسە</p>
+            
+            <div class="login-form">
+                <div class="form-group">
+                    <label class="login-label">ناونیشانی ئیمەیڵ:</label>
+                    <input type="text" id="username" class="login-input" placeholder="ناونیشانی ئیمەیڵ بنوسە">
+                </div>
+                
+                <div class="form-group">
+                    <label class="login-label">تێپەڕەوشە:</label>
+                    <input type="password" id="password" class="login-input" placeholder="تێپەڕەوشە بنوسە">
+                </div>
+                
+                <button class="login-btn" onclick="login()">چوونەژوورەوە</button>
+                
+                <div class="error-message" id="errorMessage">
+                    ناونیشانی ئیمەیڵ یان تێپەڕەوشە هەڵەیە!
+                </div>
+            </div>
+        </div>
+
+        <!-- Home Screen -->
+        <div class="home-screen" id="homeScreen">
+            <div class="logo">❓</div>
+            <h1>یاری پرسیار و وەڵام</h1>
+            <p class="subtitle">پێشبڕکێی زانستی بە ٤ یاریزان</p>
+            <div class="menu-buttons">
+                <button class="menu-btn" onclick="showAdmin()">➕ زیادکردنی پرسیار</button>
+                <button class="menu-btn" onclick="showPlayers()">👥 ناوی یاریزانەکان</button>
+                <button class="menu-btn" onclick="showGame()">▶️ دەستپێکردنی یاری</button>
+                <button class="menu-btn" onclick="logout()">🚪 چوونەدەرەوە</button>
+            </div>
+        </div>
+
+        <!-- Players Screen -->
+        <div class="admin-screen" id="playersScreen">
+            <button class="control-btn back-btn" onclick="showHome()">← گەڕانەوە</button>
+            <h2 style="text-align: center; color: #1abc9c; margin-bottom: 12px; font-size: 16px; text-shadow: 0 2px 15px rgba(26, 188, 156, 0.5);">ناوی یاریزانەکان</h2>
+            
+            <div class="admin-form">
+                <div class="form-group">
+                    <label>یاریزانی یەکەم:</label>
+                    <input type="text" id="player1Name" placeholder="ناوی یاریزانی یەکەم بنوسە...">
+                </div>
+
+                <div class="form-group">
+                    <label>یاریزانی دووەم:</label>
+                    <input type="text" id="player2Name" placeholder="ناوی یاریزانی دووەم بنوسە...">
+                </div>
+
+                <div class="form-group">
+                    <label>یاریزانی سێیەم:</label>
+                    <input type="text" id="player3Name" placeholder="ناوی یاریزانی سێیەم بنوسە...">
+                </div>
+
+                <div class="form-group">
+                    <label>یاریزانی چوارەم:</label>
+                    <input type="text" id="player4Name" placeholder="ناوی یاریزانی چوارەم بنوسە...">
+                </div>
+
+                <button class="add-question-btn" onclick="savePlayerNames()">پاشەکەوتکردنی ناوەکان</button>
+            </div>
+        </div>
+
+        <!-- Admin Screen -->
+        <div class="admin-screen" id="adminScreen">
+            <button class="control-btn back-btn" onclick="showHome()">← گەڕانەوە</button>
+            <h2 style="text-align: center; color: #1abc9c; margin-bottom: 12px; font-size: 16px; text-shadow: 0 2px 15px rgba(26, 188, 156, 0.5);">زیادکردنی پرسیاری نوێ</h2>
+            
+            <div class="admin-form">
+                <div class="form-group">
+                    <label>پرسیار:</label>
+                    <textarea id="questionText" rows="3" placeholder="پرسیارەکە بنوسە..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>هەڵبژاردنەکان:</label>
+                    <div class="options-group">
+                        <div class="option-input">
+                            <input type="radio" name="correctAnswer" value="0" id="correct0">
+                            <input type="text" id="option0" placeholder="هەڵبژاردنی ١">
+                        </div>
+                        <div class="option-input">
+                            <input type="radio" name="correctAnswer" value="1" id="correct1">
+                            <input type="text" id="option1" placeholder="هەڵبژاردنی ٢">
+                        </div>
+                        <div class="option-input">
+                            <input type="radio" name="correctAnswer" value="2" id="correct2">
+                            <input type="text" id="option2" placeholder="هەڵبژاردنی ٣">
+                        </div>
+                        <div class="option-input">
+                            <input type="radio" name="correctAnswer" value="3" id="correct3">
+                            <input type="text" id="option3" placeholder="هەڵبژاردنی ٤">
+                        </div>
+                    </div>
+                    <p style="color: #95a5a6; margin-top: 6px; font-size: 11px;">✓ نیشانەی ڕادیۆ لەسەر وەڵامی ڕاست دابنێ</p>
+                </div>
+
+                <button class="add-question-btn" onclick="addQuestion()">زیادکردنی پرسیار</button>
+
+                <div class="questions-list" id="questionsList">
+                    <h3>پرسیارە زیادکراوەکان:</h3>
+                    <div id="questionsContainer"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Screen -->
+        <div class="game-screen" id="gameScreen">
+            <div class="control-buttons">
+                <button class="control-btn back-btn" onclick="showHome()">گەڕانەوە</button>
+                <button class="control-btn" onclick="showScoreboardModal()">خشتەی خاڵەکان</button>
+            </div>
+            
+            <div class="questions-grid" id="questionsGrid"></div>
+        </div>
+    </div>
+
+    <!-- Question Modal -->
+    <div class="modal" id="questionModal">
+        <div class="modal-content">
+            <div class="player-selector" id="playerSelector">
+                <p>یاریزان هەڵبژێرە:</p>
+                <button class="player-btn" onclick="selectPlayer(0)" id="selectPlayerBtn0"></button>
+                <button class="player-btn" onclick="selectPlayer(1)" id="selectPlayerBtn1"></button>
+                <button class="player-btn" onclick="selectPlayer(2)" id="selectPlayerBtn2"></button>
+                <button class="player-btn" onclick="selectPlayer(3)" id="selectPlayerBtn3"></button>
+            </div>
+            <div id="questionContent" class="hidden">
+                <div class="question-header">
+                    <div class="question-number" id="questionNumber">پرسیاری ١</div>
+                </div>
+                <div class="timer" id="timer">12</div>
+                <div class="question-container">
+                    <div class="question-text" id="modalQuestion"></div>
+                </div>
+                <div class="answers-grid" id="answersGrid"></div>
+                <div class="modal-buttons" id="modalButtons">
+                    <button class="close-modal-btn" onclick="closeModal()">داخستن</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scoreboard Modal -->
+    <div class="scoreboard-modal" id="scoreboardModal">
+        <div class="scoreboard-content">
+            <h3>🏆 خشتەی خاڵەکان</h3>
+            <div id="modalScoreboardContainer"></div>
+            <button class="close-scoreboard-btn" onclick="closeScoreboardModal()">داخستن</button>
+        </div>
+    </div>
+
+    <script>
+        // All JavaScript code remains exactly the same as before
+        let questions = [];
+        let players = [
+            { name: 'یاریزانی ١', score: 0 },
+            { name: 'یاریزانی ٢', score: 0 },
+            { name: 'یاریزانی ٣', score: 0 },
+            { name: 'یاریزانی ٤', score: 0 }
+        ];
+        let usedQuestions = [];
+        let currentQuestion = null;
+        let currentPlayer = null;
+        let timerInterval = null;
+        let answered = false;
+
+        // Login functionality
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            if (username === 'rebin99@' && password === 'RrRr12301230@') {
+                // Login successful
+                document.getElementById('loginScreen').style.display = 'none';
+                showHome();
+            } else {
+                // Login failed
+                errorMessage.style.display = 'block';
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        function logout() {
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        // دەنگەکان بۆ کاتژمێر
+        const tickSound = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA==");
+        const finalTickSound = new Audio("data:audio/wav;base64,UklGRigAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAAAA==");
+
+        // دروستکردنی دەنگی چرکە ژمێر
+        function createTickSound() {
+            const context = new AudioContext();
+            const oscillator = context.createOscillator();
+            const gainNode = context.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(context.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, context.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.3);
+            
+            oscillator.start(context.currentTime);
+            oscillator.stop(context.currentTime + 0.3);
+        }
+
+        // دروستکردنی دەنگی کۆتا چرکە
+
+        function createFinalTickSound() {
+            const context = new AudioContext();
+            const oscillator = context.createOscillator();
+            const gainNode = context.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(context.destination);
+            
+            oscillator.frequency.setValueAtTime(600, context.currentTime);
+            oscillator.frequency.exponentialRampToValueAtTime(300, context.currentTime + 1.5);
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.4, context.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 1.5);
+            
+            oscillator.start(context.currentTime);
+            oscillator.stop(context.currentTime + 1.5);
+        }
+
+        function showHome() {
+            document.getElementById('homeScreen').style.display = 'block';
+            document.getElementById('adminScreen').style.display = 'none';
+            document.getElementById('playersScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'none';
+            closeScoreboardModal();
+        }
+
+        function showAdmin() {
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('adminScreen').style.display = 'block';
+            document.getElementById('playersScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'none';
+            displayQuestions();
+            closeScoreboardModal();
+        }
+
+        function showPlayers() {
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('adminScreen').style.display = 'none';
+            document.getElementById('playersScreen').style.display = 'block';
+            document.getElementById('gameScreen').style.display = 'none';
+            loadPlayerNames();
+            closeScoreboardModal();
+        }
+
+        function showGame() {
+            document.getElementById('homeScreen').style.display = 'none';
+            document.getElementById('adminScreen').style.display = 'none';
+            document.getElementById('playersScreen').style.display = 'none';
+            document.getElementById('gameScreen').style.display = 'block';
+            renderQuestionsGrid();
+            closeScoreboardModal();
+        }
+
+        function showScoreboardModal() {
+            renderModalScoreboard();
+            document.getElementById('scoreboardModal').style.display = 'flex';
+        }
+
+        function closeScoreboardModal() {
+            document.getElementById('scoreboardModal').style.display = 'none';
+        }
+
+        function loadPlayerNames() {
+            document.getElementById('player1Name').value = players[0].name;
+            document.getElementById('player2Name').value = players[1].name;
+            document.getElementById('player3Name').value = players[2].name;
+            document.getElementById('player4Name').value = players[3].name;
+        }
+
+        function savePlayerNames() {
+            const name1 = document.getElementById('player1Name').value.trim();
+            const name2 = document.getElementById('player2Name').value.trim();
+            const name3 = document.getElementById('player3Name').value.trim();
+            const name4 = document.getElementById('player4Name').value.trim();
+
+            if (!name1 || !name2 || !name3 || !name4) {
+                alert('تکایە هەموو ناوەکان پڕ بکەرەوە!');
+                return;
+            }
+
+            players[0].name = name1;
+            players[1].name = name2;
+            players[2].name = name3;
+            players[3].name = name4;
+
+            alert('ناوەکان بە سەرکەوتوویی پاشەکەوت کران!');
+            showHome();
+        }
+
+        function addQuestion() {
+            const questionText = document.getElementById('questionText').value.trim();
+            const options = [
+                document.getElementById('option0').value.trim(),
+                document.getElementById('option1').value.trim(),
+                document.getElementById('option2').value.trim(),
+                document.getElementById('option3').value.trim()
+            ];
+            const correctAnswer = document.querySelector('input[name="correctAnswer"]:checked');
+
+            if (!questionText || options.some(opt => !opt) || !correctAnswer) {
+                alert('تکایە هەموو خانەکان پڕ بکەرەوە و وەڵامی ڕاست دیاری بکە!');
+                return;
+            }
+
+            if (questions.length >= 40) {
+                alert('ناتوانیت زیاتر لە ٤٠ پرسیار زیاد بکەیت!');
+                return;
+            }
+
+            questions.push({
+                id: Date.now(),
+                question: questionText,
+                options: options,
+                correctAnswer: parseInt(correctAnswer.value)
+            });
+
+            // Clear form
+            document.getElementById('questionText').value = '';
+            document.getElementById('option0').value = '';
+            document.getElementById('option1').value = '';
+            document.getElementById('option2').value = '';
+            document.getElementById('option3').value = '';
+            document.querySelectorAll('input[name="correctAnswer"]').forEach(r => r.checked = false);
+
+            displayQuestions();
+            alert('پرسیار بە سەرکەوتوویی زیاد کرا!');
+        }
+
+        function displayQuestions() {
+            const container = document.getElementById('questionsContainer');
+            if (questions.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #95a5a6;">هیچ پرسیارێک زیاد نەکراوە</p>';
+                return;
+            }
+
+            container.innerHTML = questions.map((q, index) => `
+                <div class="question-item">
+                    <button class="delete-btn" onclick="deleteQuestion(${q.id})">سڕینەوە</button>
+                    <h4>پرسیاری ${index + 1}:</h4>
+                    <p><strong>${q.question}</strong></p>
+                    <ul style="margin-top: 10px;">
+                        ${q.options.map((opt, i) => `
+                            <li style="color: ${i === q.correctAnswer ? '#27ae60' : '#bdc3c7'}">
+                                ${opt} ${i === q.correctAnswer ? '✓' : ''}
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            `).join('');
+        }
+
+        function deleteQuestion(id) {
+            if (confirm('دڵنیایت لە سڕینەوەی ئەم پرسیارە؟')) {
+                questions = questions.filter(q => q.id !== id);
+                displayQuestions();
+            }
+        }
+
+        function renderQuestionsGrid() {
+            const grid = document.getElementById('questionsGrid');
+            grid.innerHTML = '';
+
+            // دروستکردنی ٤٠ بۆکس بە شێوازی ٥×٨
+            const totalBoxes = 40;
+            
+            for (let i = 1; i <= totalBoxes; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'question-box';
+                
+                if (i <= questions.length) {
+                    // پرسیاری هەیە
+                    btn.textContent = i;
+                    btn.classList.add('has-question');
+                    btn.onclick = () => openQuestion(i - 1);
+                    if (usedQuestions.includes(i - 1)) {
+                        btn.disabled = true;
+                    }
+                } else {
+                    // پرسیاری نییە
+                    btn.textContent = i;
+                    btn.classList.add('empty');
+                    btn.disabled = true;
+                }
+                
+                grid.appendChild(btn);
+            }
+        }
+
+        function renderModalScoreboard() {
+            const container = document.getElementById('modalScoreboardContainer');
+            const sortedPlayers = [...players].sort((a, b) => b.score - a.score);
+            
+            container.innerHTML = sortedPlayers.map((player, index) => `
+                <div class="modal-player-score">
+                    <span class="modal-player-name">
+                        <span class="modal-player-rank">${index + 1}</span>
+                        <span>${player.name}</span>
+                    </span>
+                    <span class="modal-player-points">${player.score}</span>
+                </div>
+            `).join('');
+        }
+
+        function selectPlayer(index) {
+            currentPlayer = index;
+            document.querySelectorAll('.player-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+            
+            setTimeout(() => {
+                document.getElementById('playerSelector').classList.add('hidden');
+                document.getElementById('questionContent').classList.remove('hidden');
+                startTimer();
+            }, 500);
+        }
+
+        function openQuestion(index) {
+            if (usedQuestions.includes(index) || index >= questions.length) return;
+            
+            currentQuestion = { ...questions[index], index };
+            answered = false;
+            currentPlayer = null;
+            
+            document.getElementById('playerSelector').classList.remove('hidden');
+            document.getElementById('questionContent').classList.add('hidden');
+            document.querySelectorAll('.player-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // نوێکردنەوەی ناوی یاریزانەکان لە دوگمەکاندا
+            for (let i = 0; i < 4; i++) {
+                document.getElementById(`selectPlayerBtn${i}`).textContent = players[i].name;
+            }
+            
+            // دانانی ژمارەی پرسیار
+            document.getElementById('questionNumber').textContent = `پرسیاری ${index + 1}`;
+            document.getElementById('modalQuestion').textContent = currentQuestion.question;
+            document.getElementById('timer').textContent = '12';
+            
+            const answersGrid = document.getElementById('answersGrid');
+            answersGrid.innerHTML = currentQuestion.options.map((opt, i) => `
+                <button class="answer-btn" onclick="checkAnswer(${i})">${opt}</button>
+            `).join('');
+            
+            // ڕێکخستنی دوگمەکان
+            const modalButtons = document.getElementById('modalButtons');
+            modalButtons.innerHTML = '<button class="close-modal-btn" onclick="closeModal()">داخستن</button>';
+            
+            document.getElementById('questionModal').style.display = 'flex';
+        }
+
+        function startTimer() {
+            let timeLeft = 12;
+            document.getElementById('timer').textContent = timeLeft;
+            
+            // لێدانی دەنگ بۆ چرکە ژمێر
+            const playTick = (isFinal = false) => {
+                if (isFinal) {
+                    createFinalTickSound();
+                } else {
+                    createTickSound();
+                }
+            };
+
+            // یەکەم دەنگ
+
+            playTick();
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+                
+                // لێدانی دەنگ بۆ هەموو چرکە
+                if (timeLeft > 0) {
+                    playTick(timeLeft === 1);
+                }
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    if (!answered) {
+                        showAnswerButton();
+                    }
+                }
+            }, 1000);
+        }
+
+        function showAnswerButton() {
+            const modalButtons = document.getElementById('modalButtons');
+            modalButtons.innerHTML = `
+                <button class="show-answer-btn" onclick="revealAnswer()">ئاشکراکردنی وەڵام</button>
+                <button class="close-modal-btn" onclick="closeModal()">داخستن</button>
+            `;
+        }
+
+        function revealAnswer() {
+            const buttons = document.querySelectorAll('.answer-btn');
+            buttons[currentQuestion.correctAnswer].classList.add('correct');
+            disableAnswers();
+            
+            const modalButtons = document.getElementById('modalButtons');
+            modalButtons.innerHTML = '<button class="close-modal-btn" onclick="closeModal()">داخستن</button>';
+        }
+
+        function checkAnswer(selectedIndex) {
+            if (answered || currentPlayer === null) return;
+            
+            answered = true;
+            clearInterval(timerInterval);
+            
+            const buttons = document.querySelectorAll('.answer-btn');
+            const isCorrect = selectedIndex === currentQuestion.correctAnswer;
+            
+            buttons[selectedIndex].classList.add(isCorrect ? 'correct' : 'wrong');
+            
+            // ئەگەر هەڵە بوو، وەڵامی راست پیشان بدە
+            if (!isCorrect) {
+                setTimeout(() => {
+                    buttons[currentQuestion.correctAnswer].classList.add('correct');
+                }, 500);
+            }
+            
+            if (isCorrect) {
+                players[currentPlayer].score += 10;
+            }
+            
+            disableAnswers();
+            
+            // نوێکردنەوەی دوگمەکان
+            const modalButtons = document.getElementById('modalButtons');
+            modalButtons.innerHTML = '<button class="close-modal-btn" onclick="closeModal()">داخستن</button>';
+        }
+
+        function disableAnswers() {
+            document.querySelectorAll('.answer-btn').forEach(btn => {
+                btn.style.pointerEvents = 'none';
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('questionModal').style.display = 'none';
+            clearInterval(timerInterval);
+            
+            if (currentQuestion) {
+                usedQuestions.push(currentQuestion.index);
+                renderQuestionsGrid();
+            }
+        }
+
+        // Initialize - Show login screen first
+        document.getElementById('loginScreen').style.display = 'flex';
+        document.getElementById('homeScreen').style.display = 'none';
+    </script>
+</body>
+</html>
