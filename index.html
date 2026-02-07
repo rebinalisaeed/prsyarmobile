@@ -1,0 +1,2145 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expay - داهاتووی پارەدان</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Prevent text selection and right-click */
+        * {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary-light: #667eea;
+            --primary-dark: #764ba2;
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --purple-light: #a855f7;
+            --purple-dark: #7c3aed;
+            --purple-gradient: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+            --text-dark: #333333;
+            --text-light: #666666;
+            --text-gray: #808080;
+            --border-color: #e0e0e0;
+            --background: #ffffff;
+            --white: #ffffff;
+            --shadow-light: 0 5px 15px rgba(102, 126, 234, 0.1);
+            --shadow-medium: 0 8px 25px rgba(102, 126, 234, 0.15);
+            --glass-bg: rgba(255, 255, 255, 0.15);
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --white-space: #f8f9fa;
+            --dark-red: #8B0000;
+            --background-gray: #E6E6E6;
+            --dark-gray: #303030;
+            --support-blue: #4285f4;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text-dark);
+            overflow: hidden;
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        /* Fullscreen app */
+        html, body {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            overflow: hidden;
+        }
+        
+        /* Prevent context menu */
+        body {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        /* سپلەش سکرین - نوێ */
+        #splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        
+        .splash-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .splash-logo-text {
+            font-size: 5rem;
+            font-weight: 800;
+            letter-spacing: -8px;
+        }
+        
+        /* هەریەکە لە پیتەکانی لۆگۆ جیاکراوەن */
+        .logo-letter {
+            opacity: 0;
+            animation-duration: 0.18s;
+            animation-fill-mode: forwards;
+            animation-timing-function: ease-out;
+        }
+        
+        /* ڕەنگی تایبەت بۆ هەر پیتێک */
+        .letter-e {
+            color: var(--primary-light);
+        }
+        
+        .letter-x {
+            color: var(--primary-light);
+        }
+        
+        .letter-p {
+            color: var(--dark-gray);
+        }
+        
+        .letter-a {
+            color: var(--dark-gray);
+        }
+        
+        .letter-y {
+            color: var(--dark-gray);
+        }
+        
+        /* ئەنیمەیشنی دەرکەوتنی پیتەکان */
+        .show-letter-e {
+            animation-name: fadeInLetter;
+            animation-delay: 0s;
+        }
+        
+        .show-letter-x {
+            animation-name: fadeInLetter;
+            animation-delay: 0.18s;
+        }
+        
+        .show-letter-p {
+            animation-name: fadeInLetter;
+            animation-delay: 0.36s;
+        }
+        
+        .show-letter-a {
+            animation-name: fadeInLetter;
+            animation-delay: 0.54s;
+        }
+        
+        .show-letter-y {
+            animation-name: fadeInLetter;
+            animation-delay: 0.72s;
+        }
+        
+        @keyframes fadeInLetter {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* ئەنیمەیشنی ئەندامی سپلەش */
+        .fade-out-splash {
+            animation: fadeOutSplash 1s ease-out 4s forwards;
+        }
+        
+        @keyframes fadeOutSplash {
+            0% {
+                opacity: 1;
+                visibility: visible;
+            }
+            100% {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+        
+        /* پەڕەکان */
+        #main-content, #profile-page {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+        
+        .active-page {
+            display: block !important;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        
+        /* کۆنتەینەری گشتی */
+        .container {
+            max-width: 450px;
+            margin: 0 auto;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--background);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* پەڕەی چوونەژوورەوە */
+        #main-content .container {
+            padding: 20px;
+        }
+        
+        /* سەرەوەی پەڕەی چوونەژوورەوە */
+        .header {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-top: 5px;
+        }
+        
+        .language-selector {
+            position: relative;
+            width: 100px;
+        }
+        
+        .language-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 8px 12px;
+            background: var(--white);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+        
+        .language-list {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 120px;
+            background: var(--white);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-top: 5px;
+            overflow: hidden;
+            display: none;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+        
+        .language-list.show {
+            display: block;
+        }
+        
+        .language-option {
+            padding: 10px 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.9rem;
+            text-align: right;
+        }
+        
+        .language-option:last-child {
+            border-bottom: none;
+        }
+        
+        .language-option:hover {
+            background-color: rgba(102, 126, 234, 0.1);
+            color: var(--primary-light);
+        }
+        
+        /* ناوەڕاستی پەڕەی چوونەژوورەوە */
+        .logo-section {
+            text-align: center;
+            margin: 20px 0 30px;
+        }
+        
+        .main-logo {
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-text {
+            font-size: 3.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            direction: ltr;
+        }
+        
+        .logo-letter-main {
+            display: inline-block;
+        }
+        
+        .logo-e {
+            color: var(--primary-light);
+        }
+        
+        .logo-x {
+            color: var(--primary-light);
+        }
+        
+        .logo-p {
+            color: var(--dark-gray);
+        }
+        
+        .logo-a {
+            color: var(--dark-gray);
+        }
+        
+        .logo-y {
+            color: var(--dark-gray);
+        }
+        
+        .welcome-text {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            line-height: 1.6;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        /* فۆرمی چوونەژوورەوە */
+        .form-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .phone-container {
+            display: flex;
+            gap: 10px;
+            align-items: stretch;
+        }
+        
+        .phone-input {
+            flex: 1;
+            padding: 15px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            outline: none;
+            font-size: 1rem;
+            text-align: left;
+            direction: ltr;
+            height: 50px;
+            color: var(--text-dark);
+            background-color: var(--white);
+        }
+        
+        .phone-input::placeholder {
+            color: #aaa;
+            opacity: 0.8;
+        }
+        
+        .phone-input:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        
+        .country-code-box {
+            padding: 15px 10px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            background: #f8f8f8;
+            font-weight: 600;
+            color: var(--text-dark);
+            width: 70px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            direction: ltr;
+        }
+        
+        .country-code-select {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: 100px;
+            background: var(--white);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-top: 5px;
+            overflow: hidden;
+            display: none;
+            z-index: 100;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            direction: ltr;
+        }
+        
+        .country-code-select.show {
+            display: block;
+        }
+        
+        .country-option {
+            padding: 10px 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.9rem;
+            text-align: center;
+            direction: ltr;
+        }
+        
+        .country-option:last-child {
+            border-bottom: none;
+        }
+        
+        .country-option:hover {
+            background-color: rgba(102, 126, 234, 0.1);
+            color: var(--primary-light);
+        }
+        
+        .password-input-container {
+            position: relative;
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 15px 45px 15px 15px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            outline: none;
+            font-size: 1rem;
+            text-align: left;
+            direction: ltr;
+            height: 50px;
+            color: var(--text-dark);
+            background-color: var(--white);
+        }
+        
+        .password-input::placeholder {
+            color: #aaa;
+            opacity: 0.8;
+        }
+        
+        .password-input:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+        
+        .toggle-password:hover {
+            color: var(--primary-light);
+        }
+        
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        
+        .forgot-password a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+        
+        /* دووگمەکانی چوونەژوورەوە */
+        .buttons-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: var(--white);
+            box-shadow: var(--shadow-medium);
+            flex: 1;
+            height: 56px;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.25);
+        }
+        
+        .btn-fast-login {
+            background: var(--white);
+            color: var(--primary-light);
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            width: 56px;
+            height: 56px;
+            padding: 0;
+        }
+        
+        .btn-fast-login:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: var(--primary-light);
+        }
+        
+        .signup-link {
+            text-align: center;
+            padding-top: 20px;
+            margin-top: 10px;
+        }
+        
+        .signup-text {
+            color: var(--text-dark);
+            font-size: 1.05rem;
+        }
+        
+        .signup-link a {
+            color: var(--primary-light);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+        
+        /* پەڕەی پرۆفایل */
+        #profile-page .container {
+            padding: 0;
+            background-color: var(--background-gray);
+        }
+        
+        .profile-header {
+            background-color: var(--background-gray);
+            padding: 20px 20px 15px;
+            height: auto;
+            min-height: auto;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        
+        /* هێلی ئاسۆی سەرەمی */
+        .profile-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        /* بازنەی پرۆفایل کلیک بۆ داشبۆرد */
+        .profile-left-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .profile-left-section:hover {
+            transform: translateY(-2px);
+        }
+        
+        .profile-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.6rem;
+            font-weight: 700;
+            border: 3px solid var(--white);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            flex-shrink: 0;
+        }
+        
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .welcome-text-small {
+            color: var(--text-gray);
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+        
+        .profile-name {
+            color: #000000;
+            font-size: 1.3rem;
+            font-weight: 800;
+        }
+        
+        /* ئایکۆنەکان لای ڕاست */
+        .header-icons {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .support-icon-container {
+            order: 1;
+        }
+        
+        .notification-icon-container {
+            order: 2;
+        }
+        
+        .header-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-light);
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        
+        .header-icon.support-icon {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(102, 126, 234, 0.2);
+            color: var(--primary-light);
+        }
+        
+        .header-icon:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        /* بۆکسە مۆرەکە */
+        .balance-card {
+            background: var(--primary-gradient);
+            border-radius: 20px;
+            padding: 15px;
+            margin: 0 0.5% 25px 0.5%;
+            width: 99%;
+            height: 100px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .balance-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            font-weight: 600;
+            text-align: right;
+            margin-bottom: 10px;
+        }
+        
+        .balance-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-direction: row;
+        }
+        
+        .balance-amount-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            direction: ltr;
+        }
+        
+        .balance-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .balance-amount {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+        
+        /* گۆڕانکاری: خاڵەکان بۆ ئەستێرەی بچووک */
+        .balance-hidden {
+            font-size: 1.9rem !important;
+        }
+        
+        .balance-hidden::before {
+            content: '********';
+            letter-spacing: 2px;
+        }
+        
+        .balance-currency {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+        
+        .eye-toggle {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-left: 5px;
+        }
+        
+        .eye-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* گۆڕانکاری: ئایکۆنەکانی ناردن، پارەدانان، ئاڵوگۆر - گەڕانەوە بۆ شێوازی پێشوو */
+        .quick-actions {
+            display: flex;
+            justify-content: space-between;
+            margin: 0 5% 20px 5%;
+            width: 90%;
+            gap: 15px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        .quick-action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            background: var(--white);
+            border-radius: 15px;
+            padding: 15px 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            min-height: 100px;
+        }
+        
+        .quick-action-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.15);
+        }
+        
+        .quick-action-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .quick-action-text {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-align: center;
+            line-height: 1.3;
+        }
+        
+        /* گۆڕانکاری: ٤ ئایکۆنی یەکەم */
+        .services-row-1 {
+            display: flex;
+            justify-content: space-between;
+            margin: 0 5% 15px 5%;
+            width: 90%;
+            gap: 10px;
+        }
+        
+        .service-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            background: var(--white);
+            border-radius: 12px;
+            padding: 12px 5px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            min-height: 80px;
+        }
+        
+        .service-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.12);
+        }
+        
+        .service-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        
+        .service-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        /* گۆڕانکاری: ٤ ئایکۆنی دووەم */
+        .services-row-2 {
+            display: flex;
+            justify-content: space-between;
+            margin: 0 5% 25px 5%;
+            width: 90%;
+            gap: 10px;
+        }
+        
+        .market-service-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            background: var(--white);
+            border-radius: 12px;
+            padding: 12px 5px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+            cursor: pointer;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            min-height: 80px;
+        }
+        
+        .market-service-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.12);
+        }
+        
+        .market-service-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--purple-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+        }
+        
+        .market-service-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        /* پەڕەی ناوەڕاستی پرۆفایل */
+        .profile-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 0;
+            background-color: var(--background-gray);
+            position: relative;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* بەشی خوارەوەی پرۆفایل */
+        .profile-bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--white);
+            padding: 8px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            max-width: 450px;
+            margin: 0 auto;
+            height: 60px;
+            width: 100%;
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.08);
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-gray);
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 33.33%;
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        .nav-item.active {
+            color: var(--primary-light);
+        }
+        
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            width: 6px;
+            height: 6px;
+            background-color: var(--primary-light);
+            border-radius: 50%;
+        }
+        
+        .nav-item:hover {
+            color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        
+        .nav-icon {
+            font-size: 1.2rem;
+            margin-bottom: 2px;
+        }
+        
+        .nav-scan {
+            font-size: 1.8rem;
+            margin-bottom: 2px;
+            color: var(--primary-light);
+        }
+        
+        .nav-text {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        /* مۆدالەکان */
+        .qr-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .qr-modal-overlay.active {
+            display: flex;
+        }
+        
+        .qr-modal {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 320px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        .qr-modal-close {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: rgba(168, 85, 247, 0.1);
+            border: none;
+            font-size: 1.3rem;
+            color: var(--purple-light);
+            cursor: pointer;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+        
+        .qr-modal-close:hover {
+            background-color: rgba(168, 85, 247, 0.2);
+            transform: rotate(90deg);
+        }
+        
+        .qr-modal-title {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            font-weight: 700;
+        }
+        
+        .qr-modal-code {
+            width: 220px;
+            height: 220px;
+            margin: 0 auto 20px;
+            background: #f8f8f8;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border: 2px solid var(--border-color);
+        }
+        
+        .qr-modal-code-large {
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                #333,
+                #333 2px,
+                transparent 2px,
+                transparent 10px
+            ),
+            repeating-linear-gradient(
+                90deg,
+                #333,
+                #333 2px,
+                transparent 2px,
+                transparent 10px
+            );
+        }
+        
+        .qr-modal-info {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+        
+        /* داشبۆرد */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 2000;
+        }
+        
+        .sidebar-overlay.active {
+            display: block;
+        }
+        
+        .sidebar-menu {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 70%;
+            max-width: 300px;
+            height: 100%;
+            background-color: var(--white);
+            padding: 20px;
+            overflow-y: auto;
+            animation: slideInRight 0.3s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+            }
+            to {
+                transform: translateX(0);
+            }
+        }
+        
+        .sidebar-close {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(168, 85, 247, 0.1);
+            border: none;
+            font-size: 1.3rem;
+            color: var(--purple-light);
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .sidebar-close:hover {
+            background-color: rgba(168, 85, 247, 0.2);
+        }
+        
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-top: 30px;
+        }
+        
+        .sidebar-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: var(--purple-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 2rem;
+            font-weight: 700;
+            margin-left: 15px;
+        }
+        
+        .sidebar-user-info {
+            flex: 1;
+            text-align: right;
+        }
+        
+        .sidebar-user-name {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-user-email {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            font-weight: 500;
+        }
+        
+        .sidebar-menu-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            cursor: pointer;
+        }
+        
+        .sidebar-menu-item:hover {
+            background-color: rgba(168, 85, 247, 0.05);
+            padding-right: 10px;
+        }
+        
+        .sidebar-menu-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: var(--purple-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.2rem;
+            margin-left: 15px;
+        }
+        
+        .sidebar-menu-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            flex: 1;
+            text-align: right;
+        }
+        
+        .language-section {
+            margin-top: 20px;
+            padding: 15px 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .language-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .language-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.2rem;
+            margin-left: 15px;
+        }
+        
+        .language-text {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            flex: 1;
+            text-align: right;
+        }
+        
+        .language-options {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        
+        .language-box {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 5px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--white);
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .language-box.active {
+            background: var(--purple-gradient);
+            color: var(--white);
+            border-color: var(--purple-light);
+        }
+        
+        .social-section {
+            margin-top: 20px;
+            padding: 15px 0;
+        }
+        
+        .social-title {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--purple-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .social-icon:hover {
+            transform: translateY(-3px);
+        }
+        
+        /* وەڵامدانەوەیی */
+        @media (max-width: 480px) {
+            .splash-logo-text {
+                font-size: 4rem;
+            }
+            
+            #main-content .container {
+                padding: 15px;
+            }
+            
+            .logo-text {
+                font-size: 3rem;
+            }
+            
+            .country-code-box {
+                width: 65px;
+            }
+            
+            .profile-content {
+                padding: 0;
+            }
+            
+            .quick-actions {
+                margin: 0 5% 15px 5%;
+                gap: 10px;
+            }
+            
+            .quick-action-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+            
+            .quick-action-text {
+                font-size: 0.75rem;
+            }
+            
+            .balance-card {
+                height: 95px;
+                padding: 12px;
+            }
+            
+            .balance-amount {
+                font-size: 1.6rem;
+            }
+            
+            .balance-hidden {
+                font-size: 1.7rem !important;
+            }
+            
+            .services-row-1, .services-row-2 {
+                margin: 0 5% 12px 5%;
+                gap: 8px;
+            }
+            
+            .service-item, .market-service-item {
+                min-height: 70px;
+                padding: 10px 4px;
+            }
+            
+            .service-icon, .market-service-icon {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+            
+            .service-text, .market-service-text {
+                font-size: 0.7rem;
+            }
+            
+            .profile-bottom-nav {
+                padding: 6px 15px;
+                height: 55px;
+            }
+            
+            .sidebar-menu {
+                width: 80%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- سپلەش سکرین -->
+    <div id="splash-screen">
+        <div class="splash-logo">
+            <div class="splash-logo-text" style="letter-spacing: -10px;">
+                <span class="logo-letter letter-e">E</span>
+                <span class="logo-letter letter-x">x</span>
+                <span class="logo-letter letter-p">p</span>
+                <span class="logo-letter letter-a">a</span>
+                <span class="logo-letter letter-y">y</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- پەڕەی سەرەکی (چوونەژوورەوە) -->
+    <div id="main-content">
+        <div class="container">
+            <!-- سەرەوە: زمان -->
+            <div class="header">
+                <div class="language-selector">
+                    <button class="language-btn" id="languageBtn">
+                        <span id="selectedLanguage">کوردی</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="language-list" id="languageList">
+                        <div class="language-option" data-lang="ckb">کوردی</div>
+                        <div class="language-option" data-lang="ar">عربي</div>
+                        <div class="language-option" data-lang="en">English</div>
+                        <div class="language-option" data-lang="fa">فارسی</div>
+                        <div class="language-option" data-lang="tr">Türkçe</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ناوەڕاست: لۆگۆ و دەربارە -->
+            <div class="logo-section">
+                <div class="main-logo">
+                    <div class="logo-text" style="letter-spacing: -5px;">
+                        <span class="logo-letter-main logo-e">E</span>
+                        <span class="logo-letter-main logo-x">x</span>
+                        <span class="logo-letter-main logo-p">p</span>
+                        <span class="logo-letter-main logo-a">a</span>
+                        <span class="logo-letter-main logo-y">y</span>
+                    </div>
+                </div>
+                <p class="welcome-text">بۆ بینینی خزمەتگوزاریەکان بچۆرە ژوورەوە</p>
+            </div>
+            
+            <!-- فۆرمی چوونەژوورەوە -->
+            <div class="form-container">
+                <!-- ژمارەی تەلەفۆن -->
+                <div class="input-group">
+                    <div class="phone-container">
+                        <input type="tel" class="phone-input" id="phoneNumber" placeholder="ژمارەی مۆبایل بنووسە">
+                        <div class="country-code-box" id="countryCodeBtn">
+                            <span id="selectedCountry">+964</span>
+                            <div class="country-code-select" id="countryCodeSelect">
+                                <div class="country-option" data-code="+964">+964</div>
+                                <div class="country-option" data-code="+98">+98</div>
+                                <div class="country-option" data-code="+90">+90</div>
+                                <div class="country-option" data-code="+963">+963</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- تێپەڕەوشە -->
+                <div class="input-group">
+                    <div class="password-input-container">
+                        <input type="password" class="password-input" id="password" placeholder="تێپەڕەوشە">
+                        <button class="toggle-password" id="togglePassword">
+                            <i class="far fa-eye-slash"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- لەبیرچوونی پاسوۆرد -->
+                <div class="forgot-password">
+                    <a href="#" id="forgotPasswordLink">ئایا تۆ پاسوۆردەکەت بیرچۆتەوە؟</a>
+                </div>
+                
+                <!-- دووگمەکانی چوونەژوورەوە -->
+                <div class="buttons-container">
+                    <button class="btn btn-primary" id="loginButton">
+                        چوونە ژوورەوە
+                    </button>
+                    <button class="btn btn-fast-login" id="fastLoginButton">
+                        <i class="fas fa-fingerprint"></i>
+                    </button>
+                </div>
+                
+                <!-- بەستەری درووستکردنی هەژمار -->
+                <div class="signup-link">
+                    <span class="signup-text">
+                        تۆ هەژمارت نیە؟ <a href="#" id="signupLink">ئێستا خۆت تۆمار بکە</a>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- پەڕەی پرۆفایل (دوای چوونەژوورەوە) -->
+    <div id="profile-page">
+        <div class="container">
+            <div class="profile-header">
+                <!-- هێلی ئاسۆی سەرەمی -->
+                <div class="profile-top-row">
+                    <!-- بازنەی پرۆفایل کلیک بۆ داشبۆرد -->
+                    <div class="profile-left-section" id="profileAvatar">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        
+                        <div class="profile-info">
+                            <div class="welcome-text-small">سڵاوت لێبێت بەڕێز:</div>
+                            <div class="profile-name">ڕێبین علی سعید</div>
+                        </div>
+                    </div>
+                    
+                    <!-- ئایکۆنی پشتگیری + زەنگۆڵە -->
+                    <div class="header-icons">
+                        <!-- ئایکۆنی پشتگیری -->
+                        <div class="header-icon support-icon support-icon-container" id="supportIcon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <!-- زەنگۆڵە -->
+                        <div class="header-icon notification-icon-container" id="notificationIcon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- بۆکسە مۆرەکە -->
+                <div class="balance-card">
+                    <div class="balance-label">بڕی باڵانس</div>
+                    
+                    <!-- ژمارەی باڵانس لە چەپ -->
+                    <div class="balance-display">
+                        <div class="balance-left">
+                            <div class="balance-amount balance-hidden" id="balanceAmount"></div>
+                            <div class="balance-currency" id="balanceCurrency">دینار</div>
+                            <button class="eye-toggle" id="eyeIcon">
+                                <i class="fas fa-eye-slash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- گۆڕانکاری: ئایکۆنەکانی ناردن، پارەدانان، ئاڵوگۆر -->
+                <div class="quick-actions">
+                    <div class="quick-action-item" id="sendMoney">
+                        <div class="quick-action-icon">
+                            <i class="fas fa-paper-plane"></i>
+                        </div>
+                        <div class="quick-action-text">ناردن</div>
+                    </div>
+                    
+                    <div class="quick-action-item" id="addMoney">
+                        <div class="quick-action-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="quick-action-text">پارەدانان</div>
+                    </div>
+                    
+                    <div class="quick-action-item" id="exchangeMoney">
+                        <div class="quick-action-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <div class="quick-action-text">ئاڵوگۆر کردن</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- بەشێکی بەتاڵ -->
+            <div class="profile-content">
+                <!-- ٤ ئایکۆنی یەکەم -->
+                <div class="services-row-1">
+                    <div class="service-item" id="mobileCard">
+                        <div class="service-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="service-text">کارتی مۆبایل</div>
+                    </div>
+                    
+                    <div class="service-item" id="internetCard">
+                        <div class="service-icon">
+                            <i class="fas fa-wifi"></i>
+                        </div>
+                        <div class="service-text">کارتی ئینتەرنێت</div>
+                    </div>
+                    
+                    <div class="service-item" id="onlineCard">
+                        <div class="service-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <div class="service-text">کارتی ئۆنڵاین</div>
+                    </div>
+                    
+                    <div class="service-item" id="tvTime">
+                        <div class="service-icon">
+                            <i class="fas fa-tv"></i>
+                        </div>
+                        <div class="service-text">کاتی تەلەڤزیۆن</div>
+                    </div>
+                </div>
+                
+                <!-- ٤ ئایکۆنی دووەم -->
+                <div class="services-row-2">
+                    <div class="market-service-item" id="market">
+                        <div class="market-service-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="market-service-text">بازار</div>
+                    </div>
+                    
+                    <div class="market-service-item" id="ePayroll">
+                        <div class="market-service-icon">
+                            <i class="fas fa-file-invoice-dollar"></i>
+                        </div>
+                        <div class="market-service-text">ئی پسوولە</div>
+                    </div>
+                    
+                    <div class="market-service-item" id="services">
+                        <div class="market-service-icon">
+                            <i class="fas fa-concierge-bell"></i>
+                        </div>
+                        <div class="market-service-text">خزمەتگوزاری</div>
+                    </div>
+                    
+                    <div class="market-service-item" id="currencyExchange">
+                        <div class="market-service-icon">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <div class="market-service-text">گۆرینی دراو</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-bottom-nav">
+                <div class="nav-item active" id="navHome">
+                    <div class="nav-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="nav-text">سەرەکی</div>
+                </div>
+                
+                <div class="nav-item" id="navScan">
+                    <div class="nav-scan">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <div class="nav-text">سکانکردن</div>
+                </div>
+                
+                <div class="nav-item" id="navTransactions">
+                    <div class="nav-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="nav-text">مامەڵەکان</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- مۆدالەکان -->
+    <div class="qr-modal-overlay" id="qrModalOverlay">
+        <div class="qr-modal">
+            <button class="qr-modal-close" id="qrModalClose">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="qr-modal-title">کۆدی QR</div>
+            <div class="qr-modal-code">
+                <div class="qr-modal-code-large"></div>
+            </div>
+            <div class="qr-modal-info">
+                کۆدەکە سکان بکە بۆ وەرگرتنی پارە
+            </div>
+        </div>
+    </div>
+    
+    <!-- داشبۆرد -->
+    <div class="sidebar-overlay" id="sidebarOverlay">
+        <div class="sidebar-menu">
+            <button class="sidebar-close" id="sidebarClose">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="sidebar-header">
+                <div class="sidebar-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-name">ڕێبین علی سعید</div>
+                    <div class="sidebar-user-email">rebin@expay.com</div>
+                </div>
+            </div>
+            
+            <div class="sidebar-menu-item" id="personalPage">
+                <div class="sidebar-menu-icon">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="sidebar-menu-text">لاپەرەی کەسی</div>
+            </div>
+            
+            <div class="sidebar-menu-item" id="transactionsHistory">
+                <div class="sidebar-menu-icon">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <div class="sidebar-menu-text">مێژووی مامەڵەکان</div>
+            </div>
+            
+            <div class="sidebar-menu-item" id="settings">
+                <div class="sidebar-menu-icon">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <div class="sidebar-menu-text">رێکخستن</div>
+            </div>
+            
+            <div class="sidebar-menu-item" id="support">
+                <div class="sidebar-menu-icon">
+                    <i class="fas fa-question-circle"></i>
+                </div>
+                <div class="sidebar-menu-text">هاوکاری</div>
+            </div>
+            
+            <div class="sidebar-menu-item" id="terms">
+                <div class="sidebar-menu-icon">
+                    <i class="fas fa-file-contract"></i>
+                </div>
+                <div class="sidebar-menu-text">یاسا و مەرجەکان</div>
+            </div>
+            
+            <div class="sidebar-menu-item" id="logout">
+                <div class="sidebar-menu-icon">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+                <div class="sidebar-menu-text">چوونە دەرەوە</div>
+            </div>
+            
+            <div class="language-section">
+                <div class="language-header">
+                    <div class="language-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <div class="language-text">زمان</div>
+                </div>
+                
+                <div class="language-options">
+                    <div class="language-box active" id="kurdishLang">
+                        کوردی
+                    </div>
+                    <div class="language-box" id="arabicLang">
+                        عربی
+                    </div>
+                    <div class="language-box" id="englishLang">
+                        English
+                    </div>
+                </div>
+            </div>
+            
+            <div class="social-section">
+                <div class="social-title">دەتوانن لەم شوێنانە لەگەڵمان بن</div>
+                <div class="social-icons">
+                    <div class="social-icon" id="facebookIcon">
+                        <i class="fab fa-facebook-f"></i>
+                    </div>
+                    <div class="social-icon" id="instagramIcon">
+                        <i class="fab fa-instagram"></i>
+                    </div>
+                    <div class="social-icon" id="tiktokIcon">
+                        <i class="fab fa-tiktok"></i>
+                    </div>
+                    <div class="social-icon" id="youtubeIcon">
+                        <i class="fab fa-youtube"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Prevent right-click context menu
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // Prevent text selection
+        document.addEventListener('selectstart', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // Prevent copy
+        document.addEventListener('copy', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // Prevent cut
+        document.addEventListener('cut', function(e) {
+            e.preventDefault();
+            return false;
+        });
+        
+        // لەسەر باربوونی پەڕە
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('پەڕە بارکرا');
+            
+            // Fullscreen app
+            function enterFullscreen() {
+                const docEl = document.documentElement;
+                if (docEl.requestFullscreen) {
+                    docEl.requestFullscreen();
+                } else if (docEl.webkitRequestFullscreen) {
+                    docEl.webkitRequestFullscreen();
+                } else if (docEl.msRequestFullscreen) {
+                    docEl.msRequestFullscreen();
+                }
+            }
+            
+            // Request fullscreen after a short delay
+            setTimeout(function() {
+                if (window.innerWidth <= 1024) {
+                    enterFullscreen();
+                }
+            }, 500);
+            
+            // سپلەش سکرین - ئەنیمەیشنی پیتەکان
+            const letters = document.querySelectorAll('.logo-letter');
+            
+            // زیادکردنی کڵاسی ئەنیمەیشن بۆ هەر پیتێک
+            letters.forEach((letter, index) => {
+                setTimeout(() => {
+                    letter.classList.add(`show-letter-${letter.classList[1].split('-')[1]}`);
+                }, index * 180);
+            });
+            
+            // سپلەش سکرین - گواستنەوە بۆ پەڕەی چوونەژوورەوە
+            setTimeout(function() {
+                document.getElementById('splash-screen').classList.add('fade-out-splash');
+                
+                setTimeout(function() {
+                    document.getElementById('splash-screen').style.display = 'none';
+                    document.getElementById('main-content').classList.add('active-page');
+                    console.log('پەڕەی چوونەژوورەوە پیشان درا');
+                }, 1000);
+            }, 4000);
+            
+            // فەنکشنی گواستنەوەی پەڕە
+            window.navigateTo = function(pageId) {
+                console.log('گواستنەوە بۆ پەڕە:', pageId);
+                
+                document.querySelectorAll('#main-content, #profile-page').forEach(function(page) {
+                    page.classList.remove('active-page');
+                });
+                
+                document.getElementById(pageId).classList.add('active-page');
+                
+                console.log('پەڕەی', pageId, 'پیشان درا');
+            };
+            
+            // لیستی زمانەکان
+            document.getElementById('languageBtn').addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.getElementById('languageList').classList.toggle('show');
+            });
+            
+            document.querySelectorAll('.language-option').forEach(function(option) {
+                option.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    var langText = this.textContent.trim();
+                    document.getElementById('selectedLanguage').textContent = langText;
+                    document.getElementById('languageList').classList.remove('show');
+                    alert('زمان گۆڕدرا بۆ: ' + langText);
+                });
+            });
+            
+            // لیستی کۆدی وڵات
+            document.getElementById('countryCodeBtn').addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.getElementById('countryCodeSelect').classList.toggle('show');
+            });
+            
+            document.querySelectorAll('.country-option').forEach(function(option) {
+                option.addEventListener('click', function() {
+                    var countryCode = this.getAttribute('data-code');
+                    document.getElementById('selectedCountry').textContent = countryCode;
+                    document.getElementById('countryCodeSelect').classList.remove('show');
+                });
+            });
+            
+            // کلیک لە دەرەوەی لیستەکان
+            document.addEventListener('click', function() {
+                document.getElementById('languageList').classList.remove('show');
+                document.getElementById('countryCodeSelect').classList.remove('show');
+            });
+            
+            // نیشاندانی/شاردنەوەی پاسوۆرد
+            document.getElementById('togglePassword').addEventListener('click', function() {
+                var passwordInput = document.getElementById('password');
+                var icon = this.querySelector('i');
+                
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    icon.classList.remove('fa-eye-slash');
+                    icon.classList.add('fa-eye');
+                } else {
+                    passwordInput.type = 'password';
+                    icon.classList.remove('fa-eye');
+                    icon.classList.add('fa-eye-slash');
+                }
+            });
+            
+            // چوونەژوورەوە
+            document.getElementById('loginButton').addEventListener('click', function() {
+                var phoneNumber = document.getElementById('phoneNumber').value;
+                var password = document.getElementById('password').value;
+                
+                if (!phoneNumber || !password) {
+                    alert('تکایە هەموو خانەکان پڕ بکەرەوە!');
+                    return;
+                }
+                
+                console.log('چوونەژوورەوە بەژمارە:', phoneNumber);
+                alert('بە سەرکەوتوویی چوویتە ژوورەوە!');
+                navigateTo('profile-page');
+            });
+            
+            // چوونەژوورەوەی خێرا
+            document.getElementById('fastLoginButton').addEventListener('click', function() {
+                alert('چوونەژوورەوەی خێرا بە پەنجەمۆر');
+                navigateTo('profile-page');
+            });
+            
+            // باڵانس
+            var balanceVisible = false;
+            document.getElementById('eyeIcon').addEventListener('click', function() {
+                var balanceAmount = document.getElementById('balanceAmount');
+                var balanceCurrency = document.getElementById('balanceCurrency');
+                var eyeIcon = document.getElementById('eyeIcon').querySelector('i');
+                
+                balanceVisible = !balanceVisible;
+                
+                if (balanceVisible) {
+                    balanceAmount.textContent = '1,250,000';
+                    balanceAmount.classList.remove('balance-hidden');
+                    balanceCurrency.style.opacity = '1';
+                    eyeIcon.classList.remove('fa-eye-slash');
+                    eyeIcon.classList.add('fa-eye');
+                } else {
+                    balanceAmount.textContent = '';
+                    balanceAmount.classList.add('balance-hidden');
+                    balanceCurrency.style.opacity = '0.7';
+                    eyeIcon.classList.remove('fa-eye');
+                    eyeIcon.classList.add('fa-eye-slash');
+                }
+            });
+            
+            // دەستکاریکردنی سەرەتاییی باڵانس
+            document.getElementById('balanceAmount').textContent = '';
+            document.getElementById('balanceAmount').classList.add('balance-hidden');
+            document.getElementById('balanceCurrency').style.opacity = '0.7';
+            
+            // کۆدی QR
+            document.getElementById('navScan').addEventListener('click', function() {
+                document.getElementById('qrModalOverlay').classList.add('active');
+                setActiveNav(this);
+            });
+            
+            document.getElementById('qrModalClose').addEventListener('click', function() {
+                document.getElementById('qrModalOverlay').classList.remove('active');
+            });
+            
+            // بازنەی پرۆفایل کلیک بۆ داشبۆرد
+            document.getElementById('profileAvatar').addEventListener('click', function() {
+                document.getElementById('sidebarOverlay').classList.add('active');
+            });
+            
+            document.getElementById('sidebarClose').addEventListener('click', function() {
+                document.getElementById('sidebarOverlay').classList.remove('active');
+            });
+            
+            // داخستنی داشبۆرد بە کلیک لەسەر باکگراوند
+            document.getElementById('sidebarOverlay').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+            
+            // چوونە دەرەوە
+            document.getElementById('logout').addEventListener('click', function() {
+                if (confirm('ئایا دڵنیایت کە دەتەوێت لە ئەکاونتەکەت بچیتە دەرەوە؟')) {
+                    alert('بە سەرکەوتوویی چووتە دەرەوە');
+                    document.getElementById('sidebarOverlay').classList.remove('active');
+                    navigateTo('main-content');
+                }
+            });
+            
+            // زمانەکان
+            document.getElementById('kurdishLang').addEventListener('click', function() {
+                setActiveLanguage('kurdishLang');
+                alert('زمان گۆڕدرا بۆ کوردی');
+            });
+            
+            document.getElementById('arabicLang').addEventListener('click', function() {
+                setActiveLanguage('arabicLang');
+                alert('زمان گۆڕدرا بۆ عەرەبی');
+            });
+            
+            document.getElementById('englishLang').addEventListener('click', function() {
+                setActiveLanguage('englishLang');
+                alert('زمان گۆڕدرا بۆ ئینگلیزی');
+            });
+            
+            function setActiveLanguage(activeLangId) {
+                document.querySelectorAll('.language-box').forEach(function(box) {
+                    box.classList.remove('active');
+                });
+                document.getElementById(activeLangId).classList.add('active');
+            }
+            
+            // بەستەرەکان
+            document.getElementById('forgotPasswordLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('بەستەری لەبیرچوونی پاسوۆرد');
+            });
+            
+            document.getElementById('signupLink').addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('بەستەری درووستکردنی هەژمار');
+            });
+            
+            // ئایکۆنەکانی داشبۆرد
+            document.getElementById('notificationIcon').addEventListener('click', function() {
+                alert('ئەمە بەشێکە لە ئاگادارنامەکان');
+            });
+            
+            // ئایکۆنی پشتگیری
+            document.getElementById('supportIcon').addEventListener('click', function() {
+                alert('پەیوەندی بە تیمی پشتگیری Expay - ئێمە لێرەین بۆ یارمەتیتان');
+            });
+            
+            // ئەکشنەکان
+            var actions = ['sendMoney', 'addMoney', 'exchangeMoney'];
+            
+            actions.forEach(function(actionId) {
+                document.getElementById(actionId).addEventListener('click', function() {
+                    var actionText = this.querySelector('.quick-action-text').textContent;
+                    alert(actionText + ' - ئەمە بەشێکە لە ' + actionText);
+                });
+            });
+            
+            // ٨ ئایکۆنی نوێ
+            var serviceItems = ['mobileCard', 'internetCard', 'onlineCard', 'tvTime', 
+                               'market', 'ePayroll', 'services', 'currencyExchange'];
+            
+            serviceItems.forEach(function(itemId) {
+                document.getElementById(itemId).addEventListener('click', function() {
+                    var itemText = this.querySelector('.service-text, .market-service-text').textContent;
+                    alert(itemText + ' - ئەمە بەشێکە لە ' + itemText);
+                });
+            });
+            
+            // نێڤیگەیشتنی خوارەوە
+            document.getElementById('navHome').addEventListener('click', function() {
+                setActiveNav(this);
+                alert('سەرەکی - گەڕانەوە بۆ پەڕەی سەرەکی');
+            });
+            
+            document.getElementById('navTransactions').addEventListener('click', function() {
+                setActiveNav(this);
+                alert('مامەڵەکان - گەڕان بۆ پەڕەی مامەڵەکان');
+            });
+            
+            function setActiveNav(activeItem) {
+                document.querySelectorAll('.nav-item').forEach(function(item) {
+                    item.classList.remove('active');
+                });
+                activeItem.classList.add('active');
+            }
+            
+            // داخستنی مۆدالەکان بە کلیک لەسەر باکگراوند
+            document.getElementById('qrModalOverlay').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('active');
+                }
+            });
+            
+            // داخستنی مۆدالەکان بە فشاری ئێسکی
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    document.getElementById('qrModalOverlay').classList.remove('active');
+                    document.getElementById('sidebarOverlay').classList.remove('active');
+                }
+            });
+            
+            // تێکەڵبوونی تۆڕە کۆمەڵایەتییەکان
+            ['facebookIcon', 'instagramIcon', 'tiktokIcon', 'youtubeIcon'].forEach(function(iconId) {
+                document.getElementById(iconId).addEventListener('click', function() {
+                    var platform = this.id.replace('Icon', '');
+                    alert('تۆڕی کۆمەڵایەتی ' + platform + ' - سەردانی پەڕەکە بکە');
+                });
+            });
+            
+            // ئایتمەکانی داشبۆرد
+            ['personalPage', 'transactionsHistory', 'settings', 'support', 'terms'].forEach(function(itemId) {
+                document.getElementById(itemId).addEventListener('click', function() {
+                    var itemText = this.querySelector('.sidebar-menu-text').textContent;
+                    alert(itemText + ' - ئەمە بەشێکە لە ' + itemText);
+                    document.getElementById('sidebarOverlay').classList.remove('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
